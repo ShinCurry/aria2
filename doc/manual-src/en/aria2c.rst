@@ -1106,7 +1106,7 @@ RPC Options
   extension is '.torrent'. For metalink, it is '.meta4'.  If false is
   given to this option, the downloads added by
   :func:`aria2.addTorrent` or :func:`aria2.addMetalink` will not be
-  saved by :option:`--save-session` option. Default: ``false``
+  saved by :option:`--save-session` option. Default: ``true``
 
 .. option:: --rpc-secret=<TOKEN>
 
@@ -1210,6 +1210,12 @@ Advanced Options
 
   Set log level to output to console.  LEVEL is either ``debug``,
   ``info``, ``notice``, ``warn`` or ``error``.  Default: ``notice``
+
+.. option:: --content-disposition-default-utf8[=true|false]
+
+  Handle quoted string in Content-Disposition header as UTF-8 instead
+  of ISO-8859-1, for example, the filename parameter, but not the
+  extended version filename*.  Default: ``false``
 
 .. option:: -D, --daemon[=true|false]
 
@@ -1958,6 +1964,43 @@ lines beginning ``#`` are treated as comments::
   bits of the configuration file (e.g., ``chmod 600 aria2.conf``), so
   that other user cannot see the contents of the file.
 
+The environment variables, such as ``${HOME}``, are expanded by shell.
+This means that those variables used in configuration file are not
+expanded.  However, it is useful to ``${HOME}`` to refer user's home
+directory in configuration file to specify file paths.  Therefore,
+aria2 expands ``${HOME}`` found in the following option values to
+user's home directory:
+
+* :option:`ca-certificate <--ca-certificate>`
+* :option:`certificate <--certificate>`
+* :option:`dht-file-path <--dht-file-path>`
+* :option:`dht-file-path6 <--dht-file-path6>`
+* :option:`dir <--dir>`
+* :option:`input-file <--input-file>`
+* :option:`load-cookies <--load-cookies>`
+* :option:`log <--log>`
+* :option:`metalink-file <--metalink-file>`
+* :option:`netrc-path <--netrc-path>`
+* :option:`on-bt-download-complete <--on-bt-download-complete>`
+* :option:`on-download-complete <--on-download-complete>`
+* :option:`on-download-error <--on-download-error>`
+* :option:`on-download-start <--on-download-start>`
+* :option:`on-download-stop <--on-download-stop>`
+* :option:`on-download-pause <--on-download-pause>`
+* :option:`out <--out>`
+* :option:`private-key <--private-key>`
+* :option:`rpc-certificate <--rpc-certificate>`
+* :option:`rpc-private-key <--rpc-private-key>`
+* :option:`save-cookies <--save-cookies>`
+* :option:`save-session <--save-session>`
+* :option:`server-stat-if <--server-stat-if>`
+* :option:`server-stat-of <--server-stat-of>`
+* :option:`torrent-file <--torrent-file>`
+
+Note that this expansion occurs even if the above options are used in
+the command-line.  This means that expansion may occur 2 times: first,
+shell and then aria2c.
+
 dht.dat
 ~~~~~~~~
 
@@ -2067,6 +2110,7 @@ of URIs. These optional lines must start with white space(s).
   * :option:`checksum <--checksum>`
   * :option:`conditional-get <--conditional-get>`
   * :option:`connect-timeout <--connect-timeout>`
+  * :option:`content-disposition-default-utf8 <--content-disposition-default-utf8>`
   * :option:`continue <-c>`
   * :option:`dir <-d>`
   * :option:`dry-run <--dry-run>`

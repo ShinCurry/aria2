@@ -273,10 +273,6 @@ SRCS =  \
 	EvictSocketPoolCommand.cc EvictSocketPoolCommand.h\
 	libssl_compat.h
 
-if ANDROID
-SRCS += android/android.c
-endif # ANDROID
-
 if MINGW_BUILD
 SRCS += WinConsoleFile.cc WinConsoleFile.h
 endif # MINGW_BUILD
@@ -711,7 +707,7 @@ AM_CPPFLAGS = \
 	@EXTRACPPFLAGS@ \
 	@ZLIB_CFLAGS@ \
 	@LIBUV_CFLAGS@ \
-	@XML_CPPFLAGS@ \
+	@LIBXML2_CFLAGS@ \
 	@EXPAT_CFLAGS@ \
 	@SQLITE3_CFLAGS@ \
 	@LIBGNUTLS_CFLAGS@ \
@@ -733,7 +729,7 @@ EXTLDADD = @ALLOCA@ \
 	@EXTRALIBS@ \
 	@ZLIB_LIBS@ \
 	@LIBUV_LIBS@ \
-	@XML_LIBS@ \
+	@LIBXML2_LIBS@ \
 	@EXPAT_LIBS@ \
 	@SQLITE3_LIBS@ \
 	@WINTLS_LIBS@ \

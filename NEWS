@@ -1,59 +1,31 @@
-aria2 1.27.1
+aria2 1.31.0
 ============
 
 Release Note
 ------------
 
-This release fixes the packaging bug that libssl_compat.h is missing
-in the tar balls.
+This release fixes assertion error in
+SimpleRandomizer::getRandomBytes.  It adds new option
+content-disposition-default-utf8.
 
 Changes
 -------
 
-* Add missing libssl_compat.h to SRCS
+* Better error message when local file status cannot be retrieved
 
-  GH-744
+  GH-836
 
-
+* Fix assertion failure in SimpleRandomizer::getRandomBytes
 
-aria2 1.27.0
-============
+  errno might not be initialized to 0, and we may get both rv == -1
+  and errno != ENOSYS.  This leads to assertion failure.  Since
+  getrandom_linux always returns -1 on failure, checking errno is
+  useless in this function.
 
-Release Note
-------------
+  GH-823
 
-This release fixes bug which may cause crash if UDP tracker is used.
-It adds new option --save-not-found which prevents downloads failed by
-"not found" error from being saved in session file.
+* Add option content-disposition-default-utf8
 
-Changes
--------
+  Patch from JimmyZ
 
-* Hard-disable openssl in osx build
-
-  Closes #739
-
-* Fix possible cause of crash if UDP tracker is used
-
-* Remove custom ftruncate64 for Android
-
-  The latest NDK versions support ftruncate64, so building a local
-  copy of ftruncate64 is no longer needed.
-
-  Also, the arm and x86 builds of ftruncate64 failed when targeting
-  API level 21 or higher, as they include <linux/err.h> which are not
-  present starting from API level 21.
-
-  Patch from Fredrik Fornwall
-
-* Fix typo found by Debian's Lintian
-
-* Add --save-not-found option
-
-* Update comment to match code
-
-  Patch from Torbjörn Lönnemark
-
-* WinTLS: Better errors (from WSA)
-
-* Compile with openssl 1.1.0
+  GH-813

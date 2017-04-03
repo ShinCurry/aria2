@@ -195,8 +195,8 @@ void HttpHeader::setReasonPhrase(const std::string& reasonPhrase)
 bool HttpHeader::fieldContains(int hdKey, const char* value)
 {
   std::pair<std::multimap<int, std::string>::const_iterator,
-            std::multimap<int, std::string>::const_iterator> range =
-      equalRange(hdKey);
+            std::multimap<int, std::string>::const_iterator>
+      range = equalRange(hdKey);
   for (auto i = range.first; i != range.second; ++i) {
     std::vector<Scip> values;
     util::splitIter((*i).second.begin(), (*i).second.end(),
@@ -220,21 +220,38 @@ bool HttpHeader::isKeepAlive() const
 }
 
 namespace {
-const char* INTERESTING_HEADER_NAMES[] = {
-    "accept-encoding", "access-control-request-headers",
-    "access-control-request-method", "authorization", "connection",
-    "content-disposition", "content-encoding", "content-length",
-    "content-range", "content-type", "digest", "infohash", "last-modified",
-    "link", "location", "origin", "port", "retry-after", "sec-websocket-key",
-    "sec-websocket-version", "set-cookie", "transfer-encoding", "upgrade",
+constexpr const char* INTERESTING_HEADER_NAMES[] = {
+    "accept-encoding",
+    "access-control-request-headers",
+    "access-control-request-method",
+    "authorization",
+    "connection",
+    "content-disposition",
+    "content-encoding",
+    "content-length",
+    "content-range",
+    "content-type",
+    "digest",
+    "infohash",
+    "last-modified",
+    "link",
+    "location",
+    "origin",
+    "port",
+    "retry-after",
+    "sec-websocket-key",
+    "sec-websocket-version",
+    "set-cookie",
+    "transfer-encoding",
+    "upgrade",
 };
 } // namespace
 
 int idInterestingHeader(const char* hdName)
 {
-  const char** i = std::lower_bound(std::begin(INTERESTING_HEADER_NAMES),
-                                    std::end(INTERESTING_HEADER_NAMES), hdName,
-                                    util::strless);
+  auto i = std::lower_bound(std::begin(INTERESTING_HEADER_NAMES),
+                            std::end(INTERESTING_HEADER_NAMES), hdName,
+                            util::strless);
   if (i != std::end(INTERESTING_HEADER_NAMES) && strcmp(*i, hdName) == 0) {
     return i - std::begin(INTERESTING_HEADER_NAMES);
   }
